@@ -10,6 +10,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import { checkAuthentication } from './middleware/checkAuthentication'
 require('dotenv').config()
 const app = express()
+const PORT = process.env.PORT || 3000
 declare module 'express-session' {
   interface SessionData {
     tempUser: any; // Bạn có thể thay thế `any` bằng kiểu cụ thể hơn nếu biết rõ kiểu của `tempUser`
@@ -185,7 +186,7 @@ const start = async () => {
       },
     ),
   )
-  app.listen(3000)
+  app.listen(PORT)
 }
 
 start()
