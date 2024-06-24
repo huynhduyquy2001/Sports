@@ -148,6 +148,7 @@ const start = async () => {
         callbackURL: '/auth/google/callback',
       },
       async (accessToken, refreshToken, profile, done) => {
+        console.log(profile);
         try {
           // find user in Payload CMS
           const result = await payload.find({

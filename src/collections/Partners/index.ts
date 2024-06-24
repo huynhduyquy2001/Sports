@@ -12,8 +12,8 @@ const Partners: CollectionConfig = {
     },
     access: {
         read: adminsAndUser,
-        update: ({ req: { user } }) => checkRole(user) || { owner: { equals: user.id } },
-        delete: () => false,
+        update: adminsAndUser,
+        delete: admins,
     },
     hooks: {
         beforeChange: [beforePartnerCreate]
@@ -267,7 +267,7 @@ const Partners: CollectionConfig = {
                     interfaceName: 'products', // optional (`name` must be present)
                     fields: [
                         {
-                            name: 'products',
+                            name: 'product',
                             type: 'relationship',
                             relationTo: 'products',
                             hasMany: true,
@@ -285,7 +285,7 @@ const Partners: CollectionConfig = {
                     interfaceName: 'offers', // optional (`name` must be present)
                     fields: [
                         {
-                            name: 'offers',
+                            name: 'offer',
                             type: 'array',
                             fields: [
                                 {
