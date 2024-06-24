@@ -19,6 +19,7 @@ import { Settings } from './globals/Settings'
 import { Reviews } from './collections/Reviews'
 import DiscountRules from './collections/Discount rules'
 import BeforeDashboard from './components/BeforeDashboard'
+import Business from './collections/Business'
 
 
 
@@ -31,7 +32,7 @@ export default buildConfig({
     },
   },
   editor: lexicalEditor({}),
-  collections: [Users, TimeSlots, Courts, Bookings, Payments, Partners, Media, PartnerSpecs, Products, Reviews, DiscountRules],
+  collections: [Users, TimeSlots, Courts, Bookings, Payments, Partners, Media, PartnerSpecs, Products, Reviews, DiscountRules, Business],
   globals: [Settings],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),

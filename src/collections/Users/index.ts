@@ -5,6 +5,9 @@ import express from 'express'
 import payload from 'payload'
 import { Novu } from '@novu/node';
 import { admins } from '../access/admins'
+import { province } from '../../json/all_VN_province'
+import CustomDistrictSelect from './components/CustomDistrictSelect'
+import CustomWardSelect from './components/CustomWardSelect'
 const getCurrentUser = async (req, res) => {
     try {
         const user = req.user;
@@ -313,6 +316,38 @@ const Users: CollectionConfig = {
                     value: 'other',
                 },
             ],
+        },
+        {
+            name: 'province_id',
+            type: 'select',
+            label: 'Province',
+            options: province.map((province: { Name: string; Code: string }) => ({
+                label: province.Name,
+                value: province.Code
+            })),
+            admin: {
+                description: 'Select the province from the list.',
+            },
+        },
+        {
+            name: 'district_id',
+            type: 'text', // Chuyển đổi thành kiểu text
+            label: 'District',
+            admin: {
+                components: {
+                    Field: CustomDistrictSelect,
+                },
+            },
+        },
+        {
+            name: 'ward_id',
+            type: 'text', // Chuyển đổi thành kiểu text
+            label: 'Ward',
+            admin: {
+                components: {
+                    Field: CustomWardSelect,
+                },
+            },
         },
         {
             name: 'verificationCode',

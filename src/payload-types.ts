@@ -19,6 +19,7 @@ export interface Config {
     products: Product;
     reviews: Review;
     'discount-rules': DiscountRule;
+    business: Business;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
@@ -34,13 +35,84 @@ export interface User {
   id: string;
   name?: string | null;
   phoneNumber?: string | null;
-  phoneVerified?: boolean | null;
-  emailVerified?: boolean | null;
+  avatar?: string | Media | null;
+  dateOfBirth?: string | null;
+  gender?: ('male' | 'female' | 'other') | null;
+  province_id?:
+  | (
+    | '217'
+    | '206'
+    | '248'
+    | '245'
+    | '253'
+    | '249'
+    | '213'
+    | '262'
+    | '205'
+    | '239'
+    | '258'
+    | '252'
+    | '220'
+    | '246'
+    | '203'
+    | '210'
+    | '241'
+    | '265'
+    | '204'
+    | '216'
+    | '207'
+    | '227'
+    | '232'
+    | '201'
+    | '236'
+    | '225'
+    | '224'
+    | '250'
+    | '202'
+    | '267'
+    | '268'
+    | '208'
+    | '219'
+    | '259'
+    | '264'
+    | '209'
+    | '247'
+    | '269'
+    | '211'
+    | '231'
+    | '235'
+    | '233'
+    | '261'
+    | '229'
+    | '260'
+    | '237'
+    | '243'
+    | '242'
+    | '230'
+    | '238'
+    | '218'
+    | '266'
+    | '240'
+    | '226'
+    | '244'
+    | '234'
+    | '223'
+    | '212'
+    | '214'
+    | '228'
+    | '215'
+    | '221'
+    | '263'
+  )
+  | null;
+  district_id?: string | null;
+  ward_id?: string | null;
   verificationCode?: number | null;
   verificationCodeExpires?: Date | null;
   otpAttempts?: number | null;
   auth2?: boolean | null;
   roles?: ('admin' | 'customer')[] | null;
+  accountStatus?: ('active' | 'suspended' | 'deleted') | null;
   updatedAt: string;
   createdAt: string;
   enableAPIKey?: boolean | null;
@@ -54,6 +126,39 @@ export interface User {
   loginAttempts?: number | null;
   lockUntil?: string | null;
   password: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  alt: string;
+  caption?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -91,46 +196,13 @@ export interface Court {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  alt: string;
-  caption?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "partners".
  */
 export interface Partner {
   id: string;
   name: string;
   owner: string | User;
-  status?: ('pending' | 'active' | 'inactive')[] | null;
+  status?: ('pending' | 'active' | 'inactive') | null;
   banner?: string | Media | null;
   avatar?: string | Media | null;
   images?:
@@ -141,20 +213,18 @@ export interface Partner {
   | null;
   daysOff?: ('monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday')[] | null;
   description?: string | null;
-  amenities?: string[] | null;
-  /**
-   * @minItems 2
-   * @maxItems 2
-   */
-  location?: [number, number] | null;
+  amenities?: ('wifi' | 'changing_room' | 'drinking_water' | 'flood_lights' | 'washroom')[] | null;
+  locationLongitude?: number | null;
+  locationLatitude?: number | null;
+  averageRating?: number | null;
+  ratingCount?: number | null;
   openingTimeAt?: number | null;
   closingTimeAt?: number | null;
-  Type: {
+  type: {
     bussinessType: ('renter' | 'seller')[];
-    bussinessObject: ('badminton' | 'basketball' | 'pickleballl' | 'soccer')[];
+    bussinessObject?: (string | Business)[] | null;
   };
   courts: {
-    forEach(arg0: (element: any) => void): unknown;
     court?: (string | Court)[] | null;
   };
   products: {
@@ -175,6 +245,18 @@ export interface Partner {
     }[]
     | null;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "business".
+ */
+export interface Business {
+  id: string;
+  name: string;
+  description?: string | null;
+  logo?: string | Media | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -338,8 +420,8 @@ export interface GeneralSettings {
   id: string;
   novu?: {
     apiKey?: string | null;
-    apiUrl?: string | null;
   };
+  googleMapsApiKey: string;
   updatedAt?: string | null;
   createdAt?: string | null;
 }

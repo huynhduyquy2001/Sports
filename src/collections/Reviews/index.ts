@@ -1,10 +1,12 @@
 import { CollectionConfig } from "payload/types";
 import { beforeReviewChange } from "./hooks/beforeChange";
+import { afterReviewChange } from "./hooks/afterChange";
 
 export const Reviews: CollectionConfig = {
     slug: 'reviews',
     hooks: {
-        beforeChange: [beforeReviewChange]
+        beforeChange: [beforeReviewChange],
+        afterChange: [afterReviewChange]
     },
     fields: [
         {

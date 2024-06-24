@@ -3,6 +3,7 @@ import adminsAndUser from '../Users/access/adminsAndUser';
 import { beforePartnerCreate } from './hooks/beforeCreate';
 import { checkRole } from '../Users/checkRole';
 import { search } from './endpoints/Search';
+import { admins } from '../access/admins';
 
 const Partners: CollectionConfig = {
     slug: 'partners',
@@ -172,6 +173,39 @@ const Partners: CollectionConfig = {
                             type: 'row',
                             fields: [
                                 {
+                                    name: 'averageRating',
+                                    type: 'number',
+                                    admin: {
+                                        width: '50%'
+                                    },
+                                    access: {
+                                        update: admins,
+                                        read: admins
+                                    },
+                                    defaultValue: 0,
+                                    min: 0,
+                                    max: 5
+                                },
+                                {
+                                    name: 'ratingCount',
+                                    type: 'number',
+                                    admin: {
+                                        width: '50%'
+                                    },
+                                    access: {
+                                        read: admins,
+                                        update: admins,
+                                    },
+                                    defaultValue: 0,
+
+                                },
+                            ]
+                        },
+
+                        {
+                            type: 'row',
+                            fields: [
+                                {
                                     name: 'openingTimeAt',
                                     type: 'number',
                                     admin: { width: '50%' },
@@ -208,27 +242,9 @@ const Partners: CollectionConfig = {
                         },
                         {
                             name: 'bussinessObject', // accessible via tabTwo.numberField
-                            type: 'select',
-                            options: [
-                                {
-                                    label: 'Badminton',
-                                    value: 'badminton',
-                                },
-                                {
-                                    label: 'Basketball',
-                                    value: 'basketball',
-                                },
-                                {
-                                    label: 'Pickleball',
-                                    value: 'pickleball',
-                                },
-                                {
-                                    label: 'Soccer',
-                                    value: 'soccer',
-                                },
-                            ],
+                            type: 'relationship',
+                            relationTo: 'business',
                             hasMany: true,
-                            required: true,
                         },
                     ],
                 },
@@ -350,20 +366,6 @@ const Partners: CollectionConfig = {
                 }
             ],
         },
-        // {
-        //     name: 'products',
-        //     type: 'relationship',
-        //     relationTo: 'products',
-        //     hasMany: true,
-        //     required: true,
-        // },
-        // {
-        //     name: 'orders',
-        //     type: 'relationship',
-        //     relationTo: 'orders',
-        //     hasMany: true,
-        //     required: true,
-        // },
     ],
 };
 
