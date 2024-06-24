@@ -287,14 +287,33 @@ const Users: CollectionConfig = {
             name: 'phoneNumber',
             type: 'text',
         },
-        // {
-        //     name: 'phoneVerified',
-        //     type: 'checkbox',
-        // },
-        // {
-        //     name: 'emailVerified',
-        //     type: 'checkbox',
-        // },
+        {
+            name: 'avatar',
+            type: 'upload',
+            relationTo: 'media',
+        },
+        {
+            name: 'dateOfBirth',
+            type: 'date',
+        },
+        {
+            name: 'gender',
+            type: 'radio',
+            options: [
+                {
+                    label: 'Male',
+                    value: 'male',
+                },
+                {
+                    label: 'Female',
+                    value: 'female',
+                },
+                {
+                    label: 'Other',
+                    value: 'other',
+                },
+            ],
+        },
         {
             name: 'verificationCode',
             type: 'number',
@@ -329,10 +348,9 @@ const Users: CollectionConfig = {
         {
             name: 'auth2',
             type: 'checkbox',
-            label: '2-step authentication'
+            label: '2-step authentication',
+            defaultValue: false,
         },
-        // Email added by default
-        // Add more fields as needed
         {
             name: 'roles',
             type: 'select',
@@ -351,14 +369,29 @@ const Users: CollectionConfig = {
             access: {
                 update: admins
             }
-            // hooks: {
-            //   beforeChange: [ensureFirstUserIsAdmin],
-            // },
-            // access: {
-            //   read: admins,
-            //   create: admins,
-            //   update: admins,
-            // },
+        },
+        {
+            name: 'accountStatus',
+            type: 'radio',
+            options: [
+                {
+                    label: 'Active',
+                    value: 'active',
+                },
+                {
+                    label: 'Suspended',
+                    value: 'suspended',
+                },
+                {
+                    label: 'Deleted',
+                    value: 'deleted',
+                },
+            ],
+            defaultValue: 'active',
+            access: {
+                read: admins,
+                update: admins
+            }
         },
     ],
     hooks: {

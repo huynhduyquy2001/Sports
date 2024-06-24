@@ -154,8 +154,19 @@ const Partners: CollectionConfig = {
                             ],
                         },
                         {
-                            name: 'location',
-                            type: 'point',
+                            type: 'row',
+                            fields: [
+                                {
+                                    name: 'locationLongitude',
+                                    type: 'number',
+                                    admin: { width: '50%' }
+                                },
+                                {
+                                    name: 'locationLatitude',
+                                    type: 'number',
+                                    admin: { width: '50%' }
+                                }
+                            ]
                         },
                         {
                             type: 'row',
