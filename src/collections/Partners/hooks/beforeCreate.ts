@@ -7,6 +7,7 @@ export const beforePartnerCreate: BeforeChangeHook = async ({ data, req, origina
     const user = req.user;
     if (!checkRole(['admin'], user)) {
         data.status = 'pending';
+        data.owner = req.user.id;
     }
     return data; // Return the data if everything is fine
 };

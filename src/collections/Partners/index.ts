@@ -1,6 +1,8 @@
 import { CollectionConfig } from 'payload/types';
 import adminsAndUser from '../Users/access/adminsAndUser';
 import { beforePartnerCreate } from './hooks/beforeCreate';
+import { checkRole } from '../Users/checkRole';
+import { search } from './endpoints/Search';
 
 const Partners: CollectionConfig = {
     slug: 'partners',
@@ -9,12 +11,19 @@ const Partners: CollectionConfig = {
     },
     access: {
         read: adminsAndUser,
-        update: adminsAndUser,
+        update: ({ req: { user } }) => checkRole(user) || { owner: { equals: user.id } },
         delete: () => false,
     },
     hooks: {
         beforeChange: [beforePartnerCreate]
     },
+    endpoints: [
+        {
+            path: '/search',
+            method: 'get',
+            handler: search
+        }
+    ],
     fields: [
         {
             name: 'name',
@@ -44,7 +53,8 @@ const Partners: CollectionConfig = {
                     label: 'Inactive',
                     value: 'inactive'
                 }
-            ]
+            ],
+            defaultValue: 'pending'
         },
         {
             type: 'tabs', // required
@@ -117,10 +127,32 @@ const Partners: CollectionConfig = {
                         },
                         {
                             name: 'amenities',
-                            type: 'text',
-                            hasMany: true
+                            type: 'select',
+                            hasMany: true,
+                            options: [
+                                {
+                                    label: 'Wifi',
+                                    value: 'wifi',
+                                },
+                                {
+                                    label: 'Changing room',
+                                    value: 'changing_room',
+                                },
+                                {
+                                    label: 'Drinking Water',
+                                    value: 'drinking_water',
+                                },
+                                {
+                                    label: 'Flood lights',
+                                    value: 'flood_lights',
+                                },
+                                {
+                                    label: 'Washroom',
+                                    value: 'washroom',
+                                },
+                                // Thêm các tùy chọn khác nếu cần
+                            ],
                         },
-
                         {
                             name: 'location',
                             type: 'point',
@@ -143,7 +175,7 @@ const Partners: CollectionConfig = {
                     ],
                 },
                 {
-                    name: 'Type',
+                    name: 'type',
                     label: 'Type', // required
                     interfaceName: 'TabTwo', // optional (`name` must be present)
                     fields: [
@@ -177,7 +209,7 @@ const Partners: CollectionConfig = {
                                 },
                                 {
                                     label: 'Pickleball',
-                                    value: 'pickleballl',
+                                    value: 'pickleball',
                                 },
                                 {
                                     label: 'Soccer',
@@ -214,6 +246,11 @@ const Partners: CollectionConfig = {
                             hasMany: true,
                         },
                     ],
+                    access: {
+                        read: ({ req }) => {
+                            return req.user.id;
+                        }
+                    }
                 },
                 {
                     name: 'offers',

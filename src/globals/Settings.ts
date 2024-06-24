@@ -25,12 +25,13 @@ export const Settings: GlobalConfig = {
           type: 'text',
           label: 'API key',
         },
-        {
-          name: 'apiUrl',
-          type: 'text',
-          label: 'API url',
-        },
+
       ]
-    }
+    },
+    {
+      name: 'googleMapsApiKey',
+      type: 'text',
+      required: true,
+    },
   ]
 }

@@ -348,6 +348,9 @@ const Users: CollectionConfig = {
                     value: 'customer',
                 },
             ],
+            access: {
+                update: admins
+            }
             // hooks: {
             //   beforeChange: [ensureFirstUserIsAdmin],
             // },

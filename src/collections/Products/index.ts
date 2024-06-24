@@ -1,9 +1,14 @@
 // Products Collection
 import { CollectionConfig } from 'payload/types';
+import adminsAndUser from '../Users/access/adminsAndUser';
 
 const Products: CollectionConfig = {
   slug: 'products',
-  admin: {useAsTitle: 'name'},
+  admin: { useAsTitle: 'name' },
+  access: {
+    update: adminsAndUser,
+    delete: adminsAndUser
+  },
   fields: [
     {
       name: 'name',
@@ -11,9 +16,9 @@ const Products: CollectionConfig = {
       required: true,
     },
     {
-        name: 'image',
-        type: 'upload',
-        relationTo: 'media',
+      name: 'image',
+      type: 'upload',
+      relationTo: 'media',
     },
     {
       name: 'description',
@@ -26,12 +31,12 @@ const Products: CollectionConfig = {
       required: true,
     },
     {
-        name: 'isSync',
-        type: 'checkbox',
-        defaultValue: true,
-        admin: {
-            description: 'Whether the product is sync',
-        },
+      name: 'isSync',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        description: 'Whether the product is sync',
+      },
     },
     {
       name: 'inventory',
@@ -39,13 +44,13 @@ const Products: CollectionConfig = {
       required: true,
     },
     {
-        name: 'owner',
-        type: 'relationship',
-        relationTo: 'partners',
-        hasMany: false,
-        admin: {
-            allowCreate: false
-        }
+      name: 'owner',
+      type: 'relationship',
+      relationTo: 'partners',
+      hasMany: false,
+      admin: {
+        allowCreate: false
+      }
     },
   ],
 };
