@@ -4,6 +4,7 @@ import { beforePartnerCreate } from './hooks/beforeCreate';
 import { checkRole } from '../Users/checkRole';
 import { search } from './endpoints/Search';
 import { admins } from '../access/admins';
+import { anyone } from '../access/anyone';
 
 const Partners: CollectionConfig = {
     slug: 'partners',
@@ -11,7 +12,7 @@ const Partners: CollectionConfig = {
         useAsTitle: 'name'
     },
     access: {
-        read: adminsAndUser,
+        read: anyone,
         update: adminsAndUser,
         delete: admins,
     },
