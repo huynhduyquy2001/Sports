@@ -1,11 +1,10 @@
-import type { GlobalConfig } from 'payload/types'
-import { admins } from '../collections/access/admins'
-
+import type { GlobalConfig } from 'payload/types';
+import { admins } from '../collections/access/admins';
 
 export const Settings: GlobalConfig = {
   slug: 'settings',
   typescript: {
-    interface: 'General Settings',
+    interface: 'GeneralSettings',
   },
   graphQL: {
     name: 'Settings',
@@ -16,22 +15,32 @@ export const Settings: GlobalConfig = {
   },
   fields: [
     {
-      name: 'novu',
-      type: 'group',
-      label: 'Novu',
-      fields: [
+      type: 'tabs',
+      tabs: [
         {
-          name: 'apiKey',
-          type: 'text',
-          label: 'API key',
-        },
-
-      ]
+          label: 'General',
+          description: 'This will appear within the tab above the fields.',
+          fields: [
+            {
+              name: 'novu',
+              type: 'group',
+              label: 'Novu',
+              fields: [
+                {
+                  name: 'apiKey',
+                  type: 'text',
+                  label: 'API key',
+                },
+              ],
+            },
+            {
+              name: 'googleMapsApiKey',
+              type: 'text',
+              required: true,
+            },
+          ],
+        }
+      ],
     },
-    {
-      name: 'googleMapsApiKey',
-      type: 'text',
-      required: true,
-    },
-  ]
-}
+  ],
+};
