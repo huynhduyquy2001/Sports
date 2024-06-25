@@ -32,7 +32,7 @@ const LocationField: React.FC<LocationFieldProps> = ({ defaultCoordinates, onLoc
     const markerRef = useRef<L.Marker | null>(null);
     const [markerPosition, setMarkerPosition] = useState(defaultCoordinates);
     const [initialPosition] = useState(defaultCoordinates);
-    console.log(initialPosition)
+
     useEffect(() => {
         if (!mapRef.current) {
             mapRef.current = L.map('map').setView([defaultCoordinates.lat, defaultCoordinates.lng], 15);
@@ -53,7 +53,6 @@ const LocationField: React.FC<LocationFieldProps> = ({ defaultCoordinates, onLoc
                 "Street": streetLayer,
                 "WorldTopoMap": WorldTopoMapLayer,
                 "Satellite": satelliteLayer,
-
             };
 
             streetLayer.addTo(mapRef.current); // Add default layer
@@ -67,25 +66,29 @@ const LocationField: React.FC<LocationFieldProps> = ({ defaultCoordinates, onLoc
             markerRef.current.on('dragend', function (e) {
                 const { lat, lng } = e.target.getLatLng();
                 const newPosition = { lat, lng };
-                setMarkerPosition(newPosition);
-                onLocationChange(newPosition);
+                if (newPosition.lat !== markerPosition.lat || newPosition.lng !== markerPosition.lng) {
+                    setMarkerPosition(newPosition);
+                    onLocationChange(newPosition);
+                }
             });
 
             mapRef.current.on('click', function (e: L.LeafletMouseEvent) {
                 const { lat, lng } = e.latlng;
                 const newPosition = { lat, lng };
-                markerRef.current?.setLatLng(newPosition);
-                setMarkerPosition(newPosition);
-                onLocationChange(newPosition);
+                if (newPosition.lat !== markerPosition.lat || newPosition.lng !== markerPosition.lng) {
+                    markerRef.current?.setLatLng(newPosition);
+                    setMarkerPosition(newPosition);
+                    onLocationChange(newPosition);
+                }
             });
 
-            //const provider = new OpenStreetMapProvider();
             const provider = new OpenStreetMapProvider({
                 params: {
                     countrycodes: 'VN', // Giới hạn tìm kiếm trong Việt Nam
                     'accept-language': 'vi', // Ưu tiên kết quả tìm kiếm bằng tiếng Việt
                 },
             });
+
             const searchControl = GeoSearchControl({
                 provider: provider,
                 style: 'bar',
@@ -100,11 +103,14 @@ const LocationField: React.FC<LocationFieldProps> = ({ defaultCoordinates, onLoc
             mapRef.current.on('geosearch/showlocation', function (event: any) {
                 const { lat, lng } = event.location;
                 const newPosition = { lat, lng };
-                markerRef.current?.setLatLng(newPosition);
-                mapRef.current?.setView(newPosition, 15);
-                setMarkerPosition(newPosition);
-                onLocationChange(newPosition);
+                if (newPosition.lat !== markerPosition.lat || newPosition.lng !== markerPosition.lng) {
+                    markerRef.current?.setLatLng(newPosition);
+                    mapRef.current?.setView(newPosition, 15);
+                    setMarkerPosition(newPosition);
+                    onLocationChange(newPosition);
+                }
             });
+
             const LocateControl = L.Control.extend({
                 onAdd: function () {
                     const button = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
@@ -113,16 +119,19 @@ const LocationField: React.FC<LocationFieldProps> = ({ defaultCoordinates, onLoc
                     button.style.width = 'auto';
                     button.style.height = 'auto';
                     button.style.padding = '5px';
-                    button.onclick = function () {
+                    button.onclick = function (e) {
+                        e.preventDefault();
                         if (navigator.geolocation) {
                             navigator.geolocation.getCurrentPosition(
                                 (position) => {
                                     const { latitude, longitude } = position.coords;
                                     const newPosition = { lat: latitude, lng: longitude };
-                                    mapRef.current?.setView(newPosition, 15);
-                                    markerRef.current?.setLatLng(newPosition);
-                                    setMarkerPosition(newPosition);
-                                    onLocationChange(newPosition);
+                                    if (newPosition.lat !== markerPosition.lat || newPosition.lng !== markerPosition.lng) {
+                                        mapRef.current?.setView(newPosition, 15);
+                                        markerRef.current?.setLatLng(newPosition);
+                                        setMarkerPosition(newPosition);
+                                        onLocationChange(newPosition);
+                                    }
                                 },
                                 (error) => {
                                     console.error('Error getting location', error);
@@ -135,6 +144,7 @@ const LocationField: React.FC<LocationFieldProps> = ({ defaultCoordinates, onLoc
                     return button;
                 },
             });
+
             const ResetPositionControl = L.Control.extend({
                 onAdd: function () {
                     const button = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
@@ -144,32 +154,21 @@ const LocationField: React.FC<LocationFieldProps> = ({ defaultCoordinates, onLoc
                     button.style.height = 'auto';
                     button.style.padding = '5px';
                     button.style.zIndex = '100';
-                    button.onclick = function () {
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(
-                                (position) => {
-                                    // const { latitude, longitude } = position.coords;
-                                    // const newPosition = { lat: latitude, lng: longitude };
-                                    mapRef.current?.setView(initialPosition, 15);
-                                    markerRef.current?.setLatLng(initialPosition);
-                                    setMarkerPosition(initialPosition);
-                                    onLocationChange(initialPosition);
-                                },
-                                (error) => {
-                                    console.error('Error getting location', error);
-                                }
-                            );
-                        } else {
-                            console.error('Geolocation is not supported by this browser.');
+                    button.onclick = function (e) {
+                        e.preventDefault();
+                        if (initialPosition.lat !== markerPosition.lat || initialPosition.lng !== markerPosition.lng) {
+                            mapRef.current?.setView(initialPosition, 15);
+                            markerRef.current?.setLatLng(initialPosition);
+                            setMarkerPosition(initialPosition);
+                            onLocationChange(initialPosition);
                         }
                     };
                     return button;
                 },
             });
+
             mapRef.current.addControl(new LocateControl({ position: 'topleft' }));
             mapRef.current.addControl(new ResetPositionControl({ position: 'topleft' }));
-
-
         } else {
             mapRef.current.setView([defaultCoordinates.lat, defaultCoordinates.lng], 15);
             markerRef.current?.setLatLng([defaultCoordinates.lat, defaultCoordinates.lng]);
