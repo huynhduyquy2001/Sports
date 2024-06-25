@@ -108,7 +108,7 @@ const LocationField: React.FC<LocationFieldProps> = ({ defaultCoordinates, onLoc
             const LocateControl = L.Control.extend({
                 onAdd: function () {
                     const button = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
-                    button.innerHTML = 'Vị trí hiện tại';
+                    button.innerHTML = 'Current position';
                     button.style.backgroundColor = 'white';
                     button.style.width = 'auto';
                     button.style.height = 'auto';
@@ -138,7 +138,7 @@ const LocationField: React.FC<LocationFieldProps> = ({ defaultCoordinates, onLoc
             const ResetPositionControl = L.Control.extend({
                 onAdd: function () {
                     const button = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
-                    button.innerHTML = 'Trở về vị trí cũ';
+                    button.innerHTML = 'Return to the saved location';
                     button.style.backgroundColor = 'white';
                     button.style.width = 'auto';
                     button.style.height = 'auto';
