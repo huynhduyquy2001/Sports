@@ -39,7 +39,7 @@ const Courts: CollectionConfig = {
             },
         },
         {
-            name: 'facilities',
+            name: 'type',
             type: 'select',
             hasMany: false,
             options: [

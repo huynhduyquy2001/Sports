@@ -26,7 +26,7 @@ app.use(
     secret: process.env.PAYLOAD_SECRET || 'your_secret_key',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === 'production' }
+    cookie: { secure: false }
   }),
 )
 const getCookieExpiration = (expiration: string | number) => {

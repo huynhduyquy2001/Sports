@@ -5,7 +5,9 @@ import { checkRole } from '../Users/checkRole';
 import { search } from './endpoints/Search';
 import { admins } from '../access/admins';
 import { anyone } from '../access/anyone';
-
+import dynamic from 'next/dynamic';
+const MapField = dynamic(() => import('../../components/Google/MapField'), { ssr: false });
+const ParentComponent = dynamic(() => import('../../components/Google/ParentComponent'), { ssr: false });
 const Partners: CollectionConfig = {
     slug: 'partners',
     admin: {
@@ -156,15 +158,26 @@ const Partners: CollectionConfig = {
                             ],
                         },
                         {
+                            name: 'location',
+                            label: 'Location',
+                            type: 'ui',
+                            admin: {
+                                components: {
+                                    Field: ParentComponent,
+                                },
+                            },
+
+                        },
+                        {
                             type: 'row',
                             fields: [
                                 {
-                                    name: 'locationLongitude',
+                                    name: 'locationLatitude',
                                     type: 'number',
                                     admin: { width: '50%' }
                                 },
                                 {
-                                    name: 'locationLatitude',
+                                    name: 'locationLongitude',
                                     type: 'number',
                                     admin: { width: '50%' }
                                 }
@@ -261,24 +274,6 @@ const Partners: CollectionConfig = {
                             hasMany: true,
                         },
                     ],
-                },
-                {
-                    name: 'products',
-                    label: 'Products', // required
-                    interfaceName: 'products', // optional (`name` must be present)
-                    fields: [
-                        {
-                            name: 'product',
-                            type: 'relationship',
-                            relationTo: 'products',
-                            hasMany: true,
-                        },
-                    ],
-                    access: {
-                        read: ({ req }) => {
-                            return req.user.id;
-                        }
-                    }
                 },
                 {
                     name: 'offers',

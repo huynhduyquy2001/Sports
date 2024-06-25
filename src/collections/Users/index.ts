@@ -8,6 +8,7 @@ import { admins } from '../access/admins'
 import { province } from '../../json/all_VN_province'
 import CustomDistrictSelect from './components/CustomDistrictSelect'
 import CustomWardSelect from './components/CustomWardSelect'
+
 const getCurrentUser = async (req, res) => {
     try {
         const user = req.user;
