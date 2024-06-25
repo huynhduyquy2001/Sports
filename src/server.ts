@@ -145,7 +145,7 @@ const start = async () => {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: '/auth/google/callback',
+        callbackURL: process.env.PAYLOAD_PUBLIC_SERVER_URL + '/auth/google/callback',
       },
       async (accessToken, refreshToken, profile, done) => {
         console.log(profile);
