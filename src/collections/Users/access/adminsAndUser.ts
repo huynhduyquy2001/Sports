@@ -11,13 +11,9 @@ const adminsAndUser: Access = ({ req: { user } }) => {
     return {
       id: {
         equals: user.id,
-      },
-      accountStatus: {
-        equals: 'active',
-      },
+      }
     }
   }
-
   return false
 }
 

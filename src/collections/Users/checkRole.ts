@@ -11,6 +11,5 @@ export const checkRole = (allRoles: User['roles'] = [], user?: User): boolean =>
     )
       return true
   }
-
   return false
 }

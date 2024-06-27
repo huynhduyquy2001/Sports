@@ -14,9 +14,9 @@ const Partners: CollectionConfig = {
         useAsTitle: 'name'
     },
     access: {
-        read: anyone,
+        read: () => true,
         update: adminsAndUser,
-        delete: admins,
+        delete: adminsAndUser,
     },
     hooks: {
         beforeChange: [beforePartnerCreate]
@@ -58,7 +58,18 @@ const Partners: CollectionConfig = {
                     value: 'inactive'
                 }
             ],
+            access: {
+                read: () => true
+            },
             defaultValue: 'pending'
+        },
+        {
+            name: 'checksumKey',
+            type: 'text',
+            access: {
+                read: admins,
+                update: admins
+            },
         },
         {
             type: 'tabs', // required

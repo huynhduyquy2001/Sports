@@ -17,6 +17,7 @@ declare module 'express-session' {
     tempToken: string;
   }
 }
+
 // Redirect root to Admin panel
 app.get('/', (_, res) => {
   res.redirect('/admin')
@@ -28,7 +29,7 @@ app.use(
     saveUninitialized: false,
     cookie: { secure: false }
   }),
-)
+);
 const getCookieExpiration = (expiration: string | number) => {
   if (typeof expiration === 'number') {
     return new Date(Date.now() + expiration * 1000); // expiration is in seconds
@@ -148,7 +149,6 @@ const start = async () => {
         callbackURL: process.env.PAYLOAD_PUBLIC_SERVER_URL + '/auth/google/callback',
       },
       async (accessToken, refreshToken, profile, done) => {
-        console.log(profile);
         try {
           // find user in Payload CMS
           const result = await payload.find({

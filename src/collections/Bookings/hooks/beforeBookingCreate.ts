@@ -1,31 +1,70 @@
 import payload from 'payload';
 import { BeforeChangeHook } from 'payload/dist/collections/config/types';
+import { checkRole } from '../../Users/checkRole';
+import { TimeSlot } from 'payload/generated-types';
 
 export const beforeBookingChange: BeforeChangeHook = async ({ data, req, originalDoc, operation }) => {
     const userID = data.user;
     const courtID = data.court;
     const bookingDate = data.bookingDate;
-    const startTime = data.startTime;
-    const endTime = data.endTime;
+    const startTime = data.bookingTime.startTime;
+    const endTime = data.bookingTime.endTime;
+
+    if (endTime < startTime) {
+        throw new Error("End time must be greater than start time");
+    }
 
     if (operation === 'create') {
+        const currentTime = new Date();
+        const startDateTime = new Date(bookingDate);
+        let hourlyRateID;
+        startDateTime.setHours(startTime, 0, 0, 0);
+
+        if (!checkRole(req.user)) {
+            data.user = req.user.id;
+        }
+
+        if (currentTime >= startDateTime) {
+            throw new Error("Cannot create a booking in the past.");
+        }
+
+        const court = await payload.findByID({
+            collection: 'courts',
+            id: courtID
+        });
+
+        if (court) {
+            hourlyRateID = court.hourlyRate; // Đảm bảo rằng hourlyRateID là UUID
+        }
+        const timeSlot = hourlyRateID.hourlyRate;
+        if (timeSlot) {
+            let totalPrice = 0;
+            let currentHour = startTime;
+
+            while (currentHour < endTime) {
+                const rate = timeSlot.find((rate: { from: number; to: number; }) => currentHour >= rate.from && currentHour < rate.to);
+                if (rate) {
+                    totalPrice += rate.price;
+                }
+                currentHour++;
+            }
+            data.totalPrice = totalPrice;
+        }
+
         try {
             const existingBooking = await payload.find({
                 collection: "bookings",
                 where: {
-                    user: {
-                        equals: userID
-                    },
                     court: {
                         equals: courtID
                     },
                     bookingDate: {
                         equals: bookingDate
                     },
-                    startTime: {
+                    'bookingTime.startTime': {
                         equals: startTime
                     },
-                    endTime: {
+                    'bookingTime.endTime': {
                         equals: endTime
                     }
                 }
@@ -40,5 +79,5 @@ export const beforeBookingChange: BeforeChangeHook = async ({ data, req, origina
         }
     }
 
-    return data; // Return the data if everything is fine
+    return data;
 };

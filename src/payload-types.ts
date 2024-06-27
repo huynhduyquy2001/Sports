@@ -20,6 +20,8 @@ export interface Config {
     reviews: Review;
     'discount-rules': DiscountRule;
     business: Business;
+    plans: Plan;
+    subscribers: Subscriber;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
@@ -187,8 +189,9 @@ export interface Court {
   name: string;
   description: string;
   image?: string | Media | null;
+  checksumKey: string;
   available?: boolean | null;
-  facilities?: ('badminton' | 'basketball' | 'pickleballl' | 'soccer') | null;
+  type?: ('badminton' | 'basketball' | 'pickleballl' | 'soccer') | null;
   owner?: (string | null) | Partner;
   hourlyRate?: (string | null) | TimeSlot;
   updatedAt: string;
@@ -203,6 +206,7 @@ export interface Partner {
   name: string;
   owner: string | User;
   status?: ('pending' | 'active' | 'inactive') | null;
+  checksumKey?: string | null;
   banner?: string | Media | null;
   avatar?: string | Media | null;
   images?:
@@ -214,8 +218,8 @@ export interface Partner {
   daysOff?: ('monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday')[] | null;
   description?: string | null;
   amenities?: ('wifi' | 'changing_room' | 'drinking_water' | 'flood_lights' | 'washroom')[] | null;
-  locationLongitude?: number | null;
   locationLatitude?: number | null;
+  locationLongitude?: number | null;
   averageRating?: number | null;
   ratingCount?: number | null;
   openingTimeAt?: number | null;
@@ -227,11 +231,8 @@ export interface Partner {
   courts: {
     court?: (string | Court)[] | null;
   };
-  products: {
-    products?: (string | Product)[] | null;
-  };
   offers: {
-    offers?:
+    offer?:
     | {
       name: string;
       description?: string | null;
@@ -262,28 +263,14 @@ export interface Business {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products".
- */
-export interface Product {
-  id: string;
-  name: string;
-  image?: string | Media | null;
-  description: string;
-  price: number;
-  isSync?: boolean | null;
-  inventory: number;
-  owner?: (string | null) | Partner;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "bookings".
  */
 export interface Booking {
   id: string;
   court: string | Court;
   user: string | User;
+  totalPrice?: number | null;
+  signature?: string | null;
   bookingDate: string;
   bookingTime: {
     startTime: number;
@@ -323,6 +310,22 @@ export interface PartnerSpec {
   itemCount?: number | null;
   lastActiveTime?: number | null;
   chatDisabled?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: string;
+  name: string;
+  image?: string | Media | null;
+  description: string;
+  price: number;
+  isSync?: boolean | null;
+  inventory: number;
+  owner?: (string | null) | Partner;
   updatedAt: string;
   createdAt: string;
 }
@@ -375,6 +378,38 @@ export interface DiscountRule {
     id?: string | null;
   }[]
   | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "plans".
+ */
+export interface Plan {
+  id: string;
+  name: string;
+  price: number;
+  durationValue?: number | null;
+  durationUnit?: ('months' | 'years') | null;
+  available?: boolean | null;
+  description?: string | null;
+  numberOfPartnersUnlimited?: boolean | null;
+  numberOfCourtsUnlimited?: boolean | null;
+  numberOfPartners?: number | null;
+  numberOfCourts?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscribers".
+ */
+export interface Subscriber {
+  id: string;
+  user: string | User;
+  plan: string | Plan;
+  startDate: string;
+  endDate: string;
   updatedAt: string;
   createdAt: string;
 }

@@ -111,71 +111,120 @@ const LocationField: React.FC<LocationFieldProps> = ({ defaultCoordinates, onLoc
                 }
             });
 
-            const LocateControl = L.Control.extend({
-                onAdd: function () {
-                    const button = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
-                    button.innerHTML = 'Current position';
-                    button.style.backgroundColor = 'white';
-                    button.style.width = 'auto';
-                    button.style.height = 'auto';
-                    button.style.padding = '5px';
-                    button.onclick = function (e) {
-                        e.preventDefault();
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(
-                                (position) => {
-                                    const { latitude, longitude } = position.coords;
-                                    const newPosition = { lat: latitude, lng: longitude };
-                                    if (newPosition.lat !== markerPosition.lat || newPosition.lng !== markerPosition.lng) {
-                                        mapRef.current?.setView(newPosition, 15);
-                                        markerRef.current?.setLatLng(newPosition);
-                                        setMarkerPosition(newPosition);
-                                        onLocationChange(newPosition);
-                                    }
-                                },
-                                (error) => {
-                                    console.error('Error getting location', error);
-                                }
-                            );
-                        } else {
-                            console.error('Geolocation is not supported by this browser.');
-                        }
-                    };
-                    return button;
-                },
-            });
-
-            const ResetPositionControl = L.Control.extend({
-                onAdd: function () {
-                    const button = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
-                    button.innerHTML = 'Return to the saved location';
-                    button.style.backgroundColor = 'white';
-                    button.style.width = 'auto';
-                    button.style.height = 'auto';
-                    button.style.padding = '5px';
-                    button.style.zIndex = '100';
-                    button.onclick = function (e) {
-                        e.preventDefault();
-                        if (initialPosition.lat !== markerPosition.lat || initialPosition.lng !== markerPosition.lng) {
-                            mapRef.current?.setView(initialPosition, 15);
-                            markerRef.current?.setLatLng(initialPosition);
-                            setMarkerPosition(initialPosition);
-                            onLocationChange(initialPosition);
-                        }
-                    };
-                    return button;
-                },
-            });
-
-            mapRef.current.addControl(new LocateControl({ position: 'topleft' }));
-            mapRef.current.addControl(new ResetPositionControl({ position: 'topleft' }));
         } else {
             mapRef.current.setView([defaultCoordinates.lat, defaultCoordinates.lng], 15);
             markerRef.current?.setLatLng([defaultCoordinates.lat, defaultCoordinates.lng]);
         }
     }, [defaultCoordinates, onLocationChange]);
 
-    return <div id="map" style={containerStyle}></div>;
+    const handleLocate = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    const newPosition = { lat: latitude, lng: longitude };
+                    if (newPosition.lat !== markerPosition.lat || newPosition.lng !== markerPosition.lng) {
+                        mapRef.current?.setView(newPosition, 15);
+                        markerRef.current?.setLatLng(newPosition);
+                        setMarkerPosition(newPosition);
+                        onLocationChange(newPosition);
+                    }
+                },
+                (error) => {
+                    console.error('Error getting location', error);
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            alert('Location access denied. Please enable location services in your browser settings.');
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            alert('Location information is unavailable. Please try again.');
+                            break;
+                        case error.TIMEOUT:
+                            alert('The request to get your location timed out. Please try again.');
+                            break;
+                        default:
+                            alert('An unknown error occurred. Please try again.');
+                            break;
+                    }
+                }
+            );
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+            alert('Geolocation is not supported by this browser.');
+        }
+    };
+
+
+    const handleReset = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        if (initialPosition.lat !== markerPosition.lat || initialPosition.lng !== markerPosition.lng) {
+            mapRef.current?.setView(initialPosition, 15);
+            markerRef.current?.setLatLng(initialPosition);
+            setMarkerPosition(initialPosition);
+            onLocationChange(initialPosition);
+        }
+    };
+
+    return (
+        <div>
+            <div id="map" style={containerStyle}></div>
+            <div style={{ marginTop: '10px' }}>
+                <button onClick={handleLocate}>Current position</button>
+                <button onClick={handleReset}>Return to the saved location</button>
+            </div>
+        </div>
+    );
 };
 
 export default LocationField;
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import MyGoogleMap from './MyGoogleMap';
+
+// const LocationField = ({ onLocationChange, defaultCoordinates }) => {
+//     const [coordinates, setCoordinates] = useState(defaultCoordinates);
+
+//     useEffect(() => {
+//         if (!coordinates.lat || !coordinates.lng) {
+//             if (navigator.geolocation) {
+//                 navigator.geolocation.getCurrentPosition(
+//                     (position) => {
+//                         const { latitude, longitude } = position.coords;
+//                         const currentPosition = { lat: latitude, lng: longitude };
+//                         setCoordinates(currentPosition);
+//                         onLocationChange(currentPosition); // Pass the coordinates to the parent component
+//                     },
+//                     (error) => {
+//                         console.error("Error getting the current position: ", error);
+//                     }
+//                 );
+//             } else {
+//                 console.error("Geolocation is not supported by this browser.");
+//             }
+//         }
+//     }, [coordinates, onLocationChange]);
+
+//     const handleLocationSelect = (newCoordinates) => {
+//         setCoordinates(newCoordinates);
+//         onLocationChange(newCoordinates); // Pass the coordinates to the parent component
+//     };
+
+//     return (
+//         <div>
+//             <label htmlFor="address">Address</label>
+//             <MyGoogleMap
+//                 apiKey={process.env.REACT_APP_GOOGLE_MAP_API_KEY}
+//                 onLocationSelect={handleLocationSelect}
+//                 defaultCoordinates={coordinates}
+//             />
+//             <div>
+//                 <strong>Selected Coordinates:</strong> {coordinates.lat}, {coordinates.lng}
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default LocationField;

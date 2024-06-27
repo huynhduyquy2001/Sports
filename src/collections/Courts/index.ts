@@ -1,12 +1,25 @@
 import { CollectionConfig } from 'payload/types';
 import adminsAndUser from '../Users/access/adminsAndUser';
+import { getAvailableTime } from './endpoints/getAvailableTime';
+import { admins } from '../access/admins';
+import { beforeCourtsChange } from './hooks/beforeChange';
 
 const Courts: CollectionConfig = {
     slug: 'courts',
     access: {
-        read: adminsAndUser,
+        read: () => true,
         update: adminsAndUser,
         delete: () => false
+    },
+    endpoints: [
+        {
+            path: '/get-available-time',
+            method: 'get',
+            handler: getAvailableTime
+        }
+    ],
+    hooks: {
+        beforeChange: [beforeCourtsChange]
     },
     fields: [
         {
@@ -37,6 +50,13 @@ const Courts: CollectionConfig = {
             admin: {
                 description: 'Whether the court is available for booking',
             },
+        }, {
+            name: 'checksumKey',
+            type: 'text',
+            access: {
+                read: admins,
+                update: () => false,
+            }
         },
         {
             name: 'type',
