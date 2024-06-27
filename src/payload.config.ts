@@ -42,11 +42,7 @@ export default buildConfig({
   graphQL: {
     schemaOutputFile: path.resolve(__dirname, 'generated-schema.graphql'),
   },
-  cors: [
-    'http://localhost:3000', // Your front-end application
-    //'https://teknix-sport-2.onrender.com', // Your front-end application
-  ],
-  csrf: ["http://localhost:3000"],
+  cors: '*',
   plugins: [payloadCloud()],
   db: postgresAdapter({
     idType: 'uuid',
