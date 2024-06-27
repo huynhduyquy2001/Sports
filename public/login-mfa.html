@@ -116,7 +116,7 @@
                                 const verificationCode = $('#field-verificationCode').val();
 
                                 $.ajax({
-                                    url: '/api/users/login',
+                                    url: 'https://teknix-sport-2.onrender.com/api/users/login',
                                     method: 'POST',
                                     contentType: 'application/json',
                                     data: JSON.stringify({ email, password, verificationCode }),
