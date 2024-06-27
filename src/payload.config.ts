@@ -44,9 +44,9 @@ export default buildConfig({
   },
   cors: [
     'http://localhost:3000', // Your front-end application
-    'https://teknix-sport-2.onrender.com', // Your front-end application
+    //'https://teknix-sport-2.onrender.com', // Your front-end application
   ],
-
+  csrf: ["http://localhost:3000"],
   plugins: [payloadCloud()],
   db: postgresAdapter({
     idType: 'uuid',
