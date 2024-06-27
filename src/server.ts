@@ -8,8 +8,19 @@ import passport from 'passport'
 import jwt from 'jsonwebtoken'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import { checkAuthentication } from './middleware/checkAuthentication'
+import cors from 'cors'
 require('dotenv').config()
 const app = express()
+
+// Cấu hình CORS
+const corsOptions = {
+  origin: ['https://tekcourtsbooking.vercel.app', 'http://localhost:3000'], // Thay thế bằng nguồn gốc (origin) mà bạn muốn cho phép
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức HTTP mà bạn muốn cho phép
+  allowedHeaders: ['Content-Type', 'Authorization'], // Các header mà bạn muốn cho phép
+};
+
+app.use(cors(corsOptions));
+
 const PORT = process.env.PORT || 3000
 declare module 'express-session' {
   interface SessionData {
