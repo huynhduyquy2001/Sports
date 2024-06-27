@@ -58,7 +58,11 @@ export const getAvailableTime = async (req: Request, res: Response, next: NextFu
         }
         const availableSlots = fullRange.map(slot => {
             const isBooked = bookedSlots.some(bookedSlot => {
-                return slot.startTime === bookedSlot.startTime;
+                return (
+                    (slot.startTime >= bookedSlot.startTime && slot.startTime < bookedSlot.endTime) || // slot starts within bookedSlot
+                    (slot.endTime > bookedSlot.startTime && slot.endTime <= bookedSlot.endTime) || // slot ends within bookedSlot
+                    (slot.startTime <= bookedSlot.startTime && slot.endTime >= bookedSlot.endTime) // slot completely overlaps bookedSlot
+                );
             });
 
             return {
@@ -66,7 +70,6 @@ export const getAvailableTime = async (req: Request, res: Response, next: NextFu
                 available: !isBooked
             };
         });
-
         // response svailable time 
         res.status(200).json(availableSlots);
     } catch (error) {
