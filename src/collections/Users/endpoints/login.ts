@@ -27,14 +27,18 @@ export const login = async (req: express.Request, res: express.Response) => {
         req.session.tempToken = result.token;
 
         if (!result.user.auth2) {
-            const cookieKey = 'payload-token';
-            const cookieValue = result.token; // Use token from result
-            const cookieOptions = {
-                httpOnly: true, // Cookie can only be accessed by the server
-                secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
-                maxAge: 60 * 60 * 1000, // Cookie lasts for 1 hour
-            };
-            res.cookie(cookieKey, cookieValue, cookieOptions);
+            const collectionConfig = payload.collections["users"].config;
+            console.log(collectionConfig.auth.cookies.domain)
+            // Set a cookie in the response with the JWT
+            res.cookie(`${payload.config.cookiePrefix}-token`, result.token, {
+                path: "/",  // Cookie path
+                httpOnly: true,  // HttpOnly flag for security
+                expires: getCookieExpiration(collectionConfig.auth.tokenExpiration),  // Cookie expiration time
+                secure: collectionConfig.auth.cookies.secure,  // Secure flag (for HTTPS)
+                sameSite: collectionConfig.auth.cookies.sameSite,  // SameSite attribute
+                domain: collectionConfig.auth.cookies.domain || undefined,  // Cookie domain
+            });
+            console.log('Đã lưu cookie')
             return res.status(200).json({ user: result.user, token: result.token });
         } else {
             return res.status(200).json({ user: result.user });
@@ -47,5 +51,14 @@ export const login = async (req: express.Request, res: express.Response) => {
 
         // Handle other errors if necessary
         return res.status(500).json({ message: error.message });
+    }
+};
+const getCookieExpiration = (expiration: string | number) => {
+    if (typeof expiration === 'number') {
+        return new Date(Date.now() + expiration * 1000); // expiration is in seconds
+    } else if (typeof expiration === 'string') {
+        return new Date(expiration);
+    } else {
+        throw new Error('Invalid token expiration format');
     }
 };

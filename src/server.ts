@@ -17,6 +17,7 @@ const corsOptions = {
   origin: ['https://tekcourtsbooking.vercel.app', 'http://localhost:3000'], // Thay thế bằng nguồn gốc (origin) mà bạn muốn cho phép
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức HTTP mà bạn muốn cho phép
   allowedHeaders: ['Content-Type', 'Authorization'], // Các header mà bạn muốn cho phép
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
