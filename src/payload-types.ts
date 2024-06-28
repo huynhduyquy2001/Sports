@@ -110,7 +110,7 @@ export interface User {
   district_id?: string | null;
   ward_id?: string | null;
   verificationCode?: number | null;
-  verificationCodeExpires?: string | null;
+  verificationCodeExpires?: Date | null;
   otpAttempts?: number | null;
   auth2?: boolean | null;
   roles?: ('admin' | 'customer')[] | null;
