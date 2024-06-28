@@ -2,8 +2,8 @@ import { CollectionConfig } from 'payload/types';
 import { admins } from '../access/admins';
 import { beforeBookingChange } from './hooks/beforeBookingCreate';
 import isBookingRead from './access/isBookingRead';
-import { checkRole } from '../Users/checkRole';
 import { afterBookingChange } from './hooks/afterBookingChange';
+import { getPaymentMethod } from './endpoints/getPaymentMethod';
 
 
 // Bookings Collection
@@ -11,12 +11,19 @@ const Bookings: CollectionConfig = {
     slug: 'bookings',
     access: {
         read: isBookingRead,
-        update: isBookingRead,
+        update: admins,
     },
     hooks: {
         beforeChange: [beforeBookingChange],
         afterChange: [afterBookingChange]
     },
+    endpoints: [
+        {
+            path: '/get-payment-method',
+            method: 'get',
+            handler: getPaymentMethod
+        }
+    ],
     fields: [
         {
             name: 'court',
@@ -35,16 +42,27 @@ const Bookings: CollectionConfig = {
             }
         },
         {
-            name: 'totalPrice',
-            type: 'number',
-            access: {
-                read: () => true,
-                update: admins
-            },
-            admin: {
-                readOnly: true
-            }
+            type: 'row',
+            fields: [
+                {
+                    name: 'totalPrice',
+                    type: 'number',
+                    access: {
+                        read: () => true,
+                        update: admins
+                    },
+                    admin: {
+                        readOnly: true
+                    }
+                },
+                {
+                    name: 'currency',
+                    type: 'select',
+                    options: ['VND', 'USD'],
+                },
+            ]
         },
+
         {
             name: 'signature',
             type: 'text',
@@ -89,14 +107,28 @@ const Bookings: CollectionConfig = {
             defaultValue: 'pending',
         },
         {
-            name: 'paymentStatus',
-            type: 'select',
-            options: [
-                { value: 'unpaid', label: 'Unpaid' },
-                { value: 'paid', label: 'Paid' },
-                { value: 'refunded', label: 'Refunded' },
-            ],
-            defaultValue: 'unpaid',
+            type: 'group',
+            name: 'payment',
+            fields: [
+                {
+                    name: 'paymentStatus',
+                    type: 'select',
+                    options: [
+                        { value: 'unpaid', label: 'Unpaid' },
+                        { value: 'paid', label: 'Paid' },
+                        { value: 'refunded', label: 'Refunded' },
+                    ],
+                    defaultValue: 'unpaid',
+                },
+                {
+                    name: 'paymentId',
+                    type: 'text',
+                },
+                {
+                    name: 'paymentLink',
+                    type: 'text',
+                },
+            ]
         },
     ],
     admin: {

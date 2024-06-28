@@ -13,12 +13,7 @@ import { sendOtp } from './endpoints/sendOTP'
 import { verifyOTP } from './endpoints/verifyOTP'
 import { getCurrentUser } from './endpoints/getCurrentUser'
 import { getBookings } from './endpoints/getBookings'
-
-
-
-
-
-
+import { BeforeChangeHook } from 'payload/dist/collections/config/types'
 
 const afterUserCreate = async ({ doc, req, operation }: { doc: any, req: any, operation: string }) => {
     if (operation === 'create') {
@@ -48,7 +43,13 @@ const afterUserCreate = async ({ doc, req, operation }: { doc: any, req: any, op
         }
     }
 };
-
+const beforeUserChange: BeforeChangeHook = async ({ data, req, originalDoc, operation }) => {
+    if (operation === 'update' || operation === 'create') {
+        if (!data.avatar) {
+            data.avatar = '4624dba7-a816-4d14-b7e0-7fb44221296a'
+        }
+    }
+}
 const Users: CollectionConfig = {
     slug: 'users',
     auth: {
@@ -103,7 +104,7 @@ const Users: CollectionConfig = {
         },
         {
             name: 'avatar',
-            type: 'upload',
+            type: 'relationship',
             relationTo: 'media',
         },
         {
@@ -242,6 +243,7 @@ const Users: CollectionConfig = {
     ],
     hooks: {
         afterChange: [afterUserCreate],
+        beforeChange: [beforeUserChange]
     },
 }
 

@@ -22,6 +22,7 @@ import BeforeDashboard from './components/BeforeDashboard'
 import Business from './collections/Business'
 import { Plans } from './collections/Plans'
 import { Subscribers } from './collections/Subscribers'
+import CourtTypes from './collections/CourtTypes'
 
 
 
@@ -34,7 +35,9 @@ export default buildConfig({
     },
   },
   editor: lexicalEditor({}),
-  collections: [Users, TimeSlots, Courts, Bookings, Payments, Partners, Media, PartnerSpecs, Products, Reviews, DiscountRules, Business, Plans, Subscribers],
+  collections: [Users, TimeSlots, Courts, Bookings, Payments, Partners, Media, PartnerSpecs, Products, Reviews, DiscountRules, Business, Plans, Subscribers,
+    CourtTypes
+  ],
   globals: [Settings],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),

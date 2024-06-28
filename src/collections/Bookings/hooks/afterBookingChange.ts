@@ -32,9 +32,15 @@ export const afterBookingChange: AfterChangeHook = async ({ doc, req, operation 
             }
 
             const checksumKey = court.checksumKey;
-
+            const data = {
+                order_id: doc.id,
+                method: doc.payment.paymentId,
+                amount: doc.totalPrice,
+                currency: 'VND',
+                buyer_email: doc.user.email,
+            }
             // Tạo chữ ký dựa trên dữ liệu booking
-            const signature = generateSignature(doc, checksumKey);
+            const signature = generateSignature(data, checksumKey);
 
             // Cập nhật trường signature cho bản ghi vừa tạo
             await payload.update({

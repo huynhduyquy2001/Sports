@@ -36,3 +36,17 @@ export function generateSignature(data: Record<string, any>, checksumKey: string
   console.log(dataToSignature)
   return dataToSignature || ''
 }
+function compareSignatures(signature1: string, signature2: string): boolean {
+  if (signature1.length !== signature2.length) {
+    return false;
+  }
+
+  const len = signature1.length;
+  let result = 0;
+
+  for (let i = 0; i < len; i++) {
+    result |= signature1.charCodeAt(i) ^ signature2.charCodeAt(i);
+  }
+
+  return result === 0;
+}

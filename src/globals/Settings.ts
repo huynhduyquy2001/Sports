@@ -39,6 +39,43 @@ export const Settings: GlobalConfig = {
               required: true,
             },
           ],
+        },
+        {
+          label: 'Payment',
+          fields: [
+            {
+              name: 'channelId',
+              type: 'text',
+              access: {
+                read: admins,
+                update: admins
+              },
+            },
+            {
+              name: 'checksumKey',
+              type: 'text',
+              access: {
+                read: admins,
+                update: admins
+              }
+            },
+            {
+              name: 'apiKey',
+              type: 'text',
+              access: {
+                read: admins,
+                update: admins
+              }
+            },
+            {
+              name: 'paymentApi',
+              type: 'text',
+              access: {
+                read: admins,
+                update: admins
+              }
+            },
+          ],
         }
       ],
     },

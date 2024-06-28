@@ -2,7 +2,6 @@ import { CollectionConfig } from 'payload/types';
 import adminsAndUser from '../Users/access/adminsAndUser';
 import { getAvailableTime } from './endpoints/getAvailableTime';
 import { admins } from '../access/admins';
-import { beforeCourtsChange } from './hooks/beforeChange';
 
 const Courts: CollectionConfig = {
     slug: 'courts',
@@ -18,9 +17,6 @@ const Courts: CollectionConfig = {
             handler: getAvailableTime
         }
     ],
-    hooks: {
-        beforeChange: [beforeCourtsChange]
-    },
     fields: [
         {
             name: 'name',
@@ -50,36 +46,12 @@ const Courts: CollectionConfig = {
             admin: {
                 description: 'Whether the court is available for booking',
             },
-        }, {
-            name: 'checksumKey',
-            type: 'text',
-            access: {
-                read: admins,
-                update: () => false,
-            }
         },
         {
             name: 'type',
-            type: 'select',
+            type: 'relationship',
             hasMany: false,
-            options: [
-                {
-                    label: 'Badminton',
-                    value: 'badminton',
-                },
-                {
-                    label: 'Basketball',
-                    value: 'basketball',
-                },
-                {
-                    label: 'Pickleball',
-                    value: 'pickleballl',
-                },
-                {
-                    label: 'Soccer',
-                    value: 'soccer',
-                },
-            ]
+            relationTo: 'court-types',
         },
         {
             name: 'owner',

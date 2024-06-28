@@ -68,8 +68,8 @@ const Partners: CollectionConfig = {
             type: 'text',
             access: {
                 read: admins,
-                update: admins
-            },
+                update: () => false,
+            }
         },
         {
             type: 'tabs', // required

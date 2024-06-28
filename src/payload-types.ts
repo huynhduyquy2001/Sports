@@ -37,7 +37,7 @@ export interface User {
   id: string;
   name?: string | null;
   phoneNumber?: string | null;
-  avatar?: string | Media | null;
+  avatar?: (string | null) | Media;
   dateOfBirth?: string | null;
   gender?: ('male' | 'female' | 'other') | null;
   province_id?:
@@ -110,7 +110,7 @@ export interface User {
   district_id?: string | null;
   ward_id?: string | null;
   verificationCode?: number | null;
-  verificationCodeExpires?: Date | null;
+  verificationCodeExpires?: string | null;
   otpAttempts?: number | null;
   auth2?: boolean | null;
   roles?: ('admin' | 'customer')[] | null;
@@ -189,8 +189,8 @@ export interface Court {
   name: string;
   description: string;
   image?: string | Media | null;
-  checksumKey: string;
   available?: boolean | null;
+  checksumKey?: string | null;
   type?: ('badminton' | 'basketball' | 'pickleballl' | 'soccer') | null;
   owner?: (string | null) | Partner;
   hourlyRate?: (string | null) | TimeSlot;
@@ -277,7 +277,11 @@ export interface Booking {
     endTime: number;
   };
   bookingStatus?: ('pending' | 'confirmed' | 'cancelled') | null;
-  paymentStatus?: ('unpaid' | 'paid' | 'refunded') | null;
+  payment?: {
+    paymentStatus?: ('unpaid' | 'paid' | 'refunded') | null;
+    paymentId?: string | null;
+    paymentLink?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -457,6 +461,10 @@ export interface GeneralSettings {
     apiKey?: string | null;
   };
   googleMapsApiKey: string;
+  channelId?: string | null;
+  checksumKey?: string | null;
+  apiKey?: string | null;
+  paymentApi?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }

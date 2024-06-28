@@ -3,12 +3,10 @@ import payload from "payload";
 
 export const login = async (req: express.Request, res: express.Response) => {
     const { email, password } = req.body;
-
     // Check if email and password are provided
     if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required.' });
     }
-
     try {
         const result = await payload.login({
             collection: 'users',
@@ -22,13 +20,10 @@ export const login = async (req: express.Request, res: express.Response) => {
         } else if (result.user.accountStatus === 'deleted') {
             return res.status(401).json({ message: 'Account has been deleted' });
         }
-
         req.session.tempUser = result.user;
         req.session.tempToken = result.token;
-
         if (!result.user.auth2) {
             const collectionConfig = payload.collections["users"].config;
-            console.log(collectionConfig.auth.cookies.domain)
             // Set a cookie in the response with the JWT
             res.cookie(`${payload.config.cookiePrefix}-token`, result.token, {
                 path: "/",  // Cookie path
@@ -38,7 +33,6 @@ export const login = async (req: express.Request, res: express.Response) => {
                 sameSite: collectionConfig.auth.cookies.sameSite,  // SameSite attribute
                 domain: collectionConfig.auth.cookies.domain || undefined,  // Cookie domain
             });
-            console.log('Đã lưu cookie')
             return res.status(200).json({ user: result.user, token: result.token });
         } else {
             return res.status(200).json({ user: result.user });
