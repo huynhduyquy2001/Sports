@@ -4,6 +4,9 @@ import { beforeBookingChange } from './hooks/beforeBookingCreate';
 import isBookingRead from './access/isBookingRead';
 import { afterBookingChange } from './hooks/afterBookingChange';
 import { getPaymentMethod } from './endpoints/getPaymentMethod';
+import { generateChecksumKey } from './endpoints/generateChecksumKey';
+import { createBooking } from './endpoints/createBookings';
+import adminsAndUser from '../Users/access/adminsAndUser';
 
 
 // Bookings Collection
@@ -12,18 +15,30 @@ const Bookings: CollectionConfig = {
     access: {
         read: isBookingRead,
         update: admins,
+        create: adminsAndUser
     },
     hooks: {
         beforeChange: [beforeBookingChange],
-        afterChange: [afterBookingChange]
+        //afterChange: [afterBookingChange]
     },
     endpoints: [
         {
             path: '/get-payment-method',
             method: 'get',
             handler: getPaymentMethod
+        },
+        {
+            path: '/generate-checksum-key',
+            method: 'post',
+            handler: generateChecksumKey
+        },
+        {
+            path: '/create',
+            method: 'post',
+            handler: createBooking
         }
     ],
+
     fields: [
         {
             name: 'court',

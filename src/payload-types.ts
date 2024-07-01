@@ -12,7 +12,6 @@ export interface Config {
     'time-slots': TimeSlot;
     courts: Court;
     bookings: Booking;
-    payments: Payment;
     partners: Partner;
     media: Media;
     'partner-specs': PartnerSpec;
@@ -22,6 +21,7 @@ export interface Config {
     business: Business;
     plans: Plan;
     subscribers: Subscriber;
+    'court-types': CourtType;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
@@ -190,10 +190,20 @@ export interface Court {
   description: string;
   image?: string | Media | null;
   available?: boolean | null;
-  checksumKey?: string | null;
-  type?: ('badminton' | 'basketball' | 'pickleballl' | 'soccer') | null;
+  type?: (string | null) | CourtType;
   owner?: (string | null) | Partner;
   hourlyRate?: (string | null) | TimeSlot;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "court-types".
+ */
+export interface CourtType {
+  id: string;
+  name: string;
+  icon?: string | Media | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -270,6 +280,7 @@ export interface Booking {
   court: string | Court;
   user: string | User;
   totalPrice?: number | null;
+  currency?: ('VND' | 'USD') | null;
   signature?: string | null;
   bookingDate: string;
   bookingTime: {
@@ -284,19 +295,6 @@ export interface Booking {
   };
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payments".
- */
-export interface Payment {
-  id: string;
-  booking: string | Booking;
-  amount: number;
-  paymentMethod: 'credit-card' | 'paypal' | 'bank-transfer';
-  status?: ('pending' | 'successful' | 'failed') | null;
-  createdAt: string;
-  updatedAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

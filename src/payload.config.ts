@@ -23,6 +23,9 @@ import Business from './collections/Business'
 import { Plans } from './collections/Plans'
 import { Subscribers } from './collections/Subscribers'
 import CourtTypes from './collections/CourtTypes'
+import { Blogs } from './collections/Blogs'
+import Categories from './collections/Categories'
+import Tags from './collections/Tags'
 
 
 
@@ -35,8 +38,11 @@ export default buildConfig({
     },
   },
   editor: lexicalEditor({}),
-  collections: [Users, TimeSlots, Courts, Bookings, Payments, Partners, Media, PartnerSpecs, Products, Reviews, DiscountRules, Business, Plans, Subscribers,
-    CourtTypes
+  collections: [Users, TimeSlots, Courts, Bookings, Partners, Media, PartnerSpecs, Products, Reviews, DiscountRules, Business, Plans, Subscribers,
+    CourtTypes,
+    Blogs,
+    Categories,
+    Tags
   ],
   globals: [Settings],
   typescript: {

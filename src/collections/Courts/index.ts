@@ -15,7 +15,8 @@ const Courts: CollectionConfig = {
             path: '/get-available-time',
             method: 'get',
             handler: getAvailableTime
-        }
+        },
+
     ],
     fields: [
         {

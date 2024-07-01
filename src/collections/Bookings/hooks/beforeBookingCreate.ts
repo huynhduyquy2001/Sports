@@ -19,9 +19,6 @@ export const beforeBookingChange: BeforeChangeHook = async ({ data, req, origina
         const startDateTime = new Date(bookingDate);
         let hourlyRateID;
         startDateTime.setHours(startTime, 0, 0, 0);
-        if (!checkRole(req.user)) {
-            data.user = req.user.id;
-        }
 
         if (currentTime >= startDateTime) {
             throw new Error("Cannot create a booking in the past.");
